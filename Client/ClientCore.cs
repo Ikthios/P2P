@@ -49,7 +49,7 @@ namespace Client
                 // Start listening on client port
                 clientForm.DisplayConnection("Starting client listener on port " + port);
                 listener.Start();
-
+                
                 // Internal check
                 Debug.WriteLine("Starting while loop [CLIENTCORE].");
                 while (loop)
