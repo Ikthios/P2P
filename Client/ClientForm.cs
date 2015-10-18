@@ -225,6 +225,10 @@ namespace Client
                     If the received data is related to a peer request then
                     here is where the return string from the server will be
                     parsed, split and handled accordingly.
+                    [0] = Keyword
+                    [1] = IP Address
+                    [2] = Port of requesting client
+                    [3] = Request filename
                     */
                     string[] dataArray = dataString.Split(',');
 
@@ -239,23 +243,17 @@ namespace Client
                         // PPR, Peer IP, Peer internal host port, File to be Requested
                         peerListBox.AppendText(dataString + "\n");
 
-                        // Stage 1, connect to outside peer internal server
-                        tcpClient.Connect(dataArray[1], int.Parse(dataArray[2]));
-                        Debug.WriteLine("Stage 1 complete [CLIENTFORM].");
-
                         try
                         {
-                            // Stage 2, Send file request to peer (dataString) is already formatted for this
+                            // Stage 1, Send file request to peer (dataString) is already formatted for this
                             sendStream = tcpClient.GetStream();
                             byte[] streamBytesData = encoding.GetBytes(dataString);
                             sendStream.Write(streamBytesData, 0, streamBytesData.Length);
                             Debug.WriteLine("Stage 2 complete [CLIENTFORM].");
                         }catch(Exception error)
                         {
-                            Debug.WriteLine("Stage 2 error: " + error.ToString());
+                            Debug.WriteLine("Stage 1 error: " + error.ToString());
                         }
-                        
-                        
                     }
                     else
                     {
