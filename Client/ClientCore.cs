@@ -21,7 +21,7 @@ namespace Client
             StartClientServer(form.GetIpAddress(), 5500);
             
             // Internal check
-            Debug.WriteLine("Starting client thread [CLIENTCORE].");
+            Debug.WriteLine("Starting client thread at " + form.GetIpAddress() + " [CLIENTCORE].");
         }
 
         public void StartClientServer(String ip, int port)

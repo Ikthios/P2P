@@ -221,11 +221,41 @@ namespace Client
                         dataString += Convert.ToChar(streamBytesB[j]);
                     }
 
-                    if (dataString.Equals("SCL"))
+                    /*
+                    If the received data is related to a peer request then
+                    here is where the return string from the server will be
+                    parsed, split and handled accordingly.
+                    */
+                    string[] dataArray = dataString.Split(',');
+
+                    if (dataArray[0].Equals("SCL"))
                     {
                         // Print server message in peer listing text box
                         //peerListBox.AppendText(dataString + "\n");
                         loop = false;
+                    }
+                    else if(dataArray[0].Equals("PPR"))
+                    {
+                        // PPR, Peer IP, Peer internal host port, File to be Requested
+                        peerListBox.AppendText(dataString + "\n");
+
+                        // Stage 1, connect to outside peer internal server
+                        tcpClient.Connect(dataArray[1], int.Parse(dataArray[2]));
+                        Debug.WriteLine("Stage 1 complete [CLIENTFORM].");
+
+                        try
+                        {
+                            // Stage 2, Send file request to peer (dataString) is already formatted for this
+                            sendStream = tcpClient.GetStream();
+                            byte[] streamBytesData = encoding.GetBytes(dataString);
+                            sendStream.Write(streamBytesData, 0, streamBytesData.Length);
+                            Debug.WriteLine("Stage 2 complete [CLIENTFORM].");
+                        }catch(Exception error)
+                        {
+                            Debug.WriteLine("Stage 2 error: " + error.ToString());
+                        }
+                        
+                        
                     }
                     else
                     {
@@ -265,11 +295,6 @@ namespace Client
         public void DisplayError(string sentError)
         {
             errorTextBox.AppendText(sentError);
-        }
-
-        public String GetLocalHostAddress()
-        {
-            return localhostAddressTextBox.Text.ToString();
         }
     }
 }

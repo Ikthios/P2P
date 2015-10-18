@@ -56,7 +56,6 @@
             this.errorTextBox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.downMonBtn = new System.Windows.Forms.Button();
-            this.localhostAddressTextBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -175,7 +174,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(246, 236);
+            this.groupBox1.Size = new System.Drawing.Size(246, 237);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "File Search";
@@ -210,7 +209,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(255, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(226, 236);
+            this.groupBox2.Size = new System.Drawing.Size(226, 237);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Peer Listing";
@@ -225,7 +224,7 @@
             this.peerListBox.Multiline = true;
             this.peerListBox.Name = "peerListBox";
             this.peerListBox.ReadOnly = true;
-            this.peerListBox.Size = new System.Drawing.Size(220, 217);
+            this.peerListBox.Size = new System.Drawing.Size(220, 218);
             this.peerListBox.TabIndex = 0;
             // 
             // groupBox3
@@ -233,9 +232,9 @@
             this.groupBox3.BackColor = System.Drawing.Color.Tan;
             this.groupBox3.Controls.Add(this.tabControl1);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(3, 245);
+            this.groupBox3.Location = new System.Drawing.Point(3, 246);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(246, 189);
+            this.groupBox3.Size = new System.Drawing.Size(246, 188);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Server Connection Status";
@@ -248,14 +247,13 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 16);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(240, 170);
+            this.tabControl1.Size = new System.Drawing.Size(240, 169);
             this.tabControl1.TabIndex = 0;
             // 
             // connTabPage
             // 
             this.connTabPage.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.connTabPage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.connTabPage.Controls.Add(this.localhostAddressTextBox);
             this.connTabPage.Controls.Add(this.addressTextBox);
             this.connTabPage.Controls.Add(this.label2);
             this.connTabPage.Controls.Add(this.connStatBtn);
@@ -265,7 +263,7 @@
             this.connTabPage.Location = new System.Drawing.Point(4, 22);
             this.connTabPage.Name = "connTabPage";
             this.connTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.connTabPage.Size = new System.Drawing.Size(232, 144);
+            this.connTabPage.Size = new System.Drawing.Size(232, 143);
             this.connTabPage.TabIndex = 0;
             this.connTabPage.Text = "Connections";
             // 
@@ -346,7 +344,7 @@
             this.errorTabPage.Location = new System.Drawing.Point(4, 22);
             this.errorTabPage.Name = "errorTabPage";
             this.errorTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.errorTabPage.Size = new System.Drawing.Size(232, 105);
+            this.errorTabPage.Size = new System.Drawing.Size(232, 144);
             this.errorTabPage.TabIndex = 1;
             this.errorTabPage.Text = "Errors";
             // 
@@ -359,7 +357,7 @@
             this.errorTextBox.Name = "errorTextBox";
             this.errorTextBox.ReadOnly = true;
             this.errorTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.errorTextBox.Size = new System.Drawing.Size(224, 97);
+            this.errorTextBox.Size = new System.Drawing.Size(224, 136);
             this.errorTextBox.TabIndex = 0;
             // 
             // groupBox4
@@ -367,9 +365,9 @@
             this.groupBox4.BackColor = System.Drawing.Color.Tan;
             this.groupBox4.Controls.Add(this.downMonBtn);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox4.Location = new System.Drawing.Point(255, 245);
+            this.groupBox4.Location = new System.Drawing.Point(255, 246);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(226, 189);
+            this.groupBox4.Size = new System.Drawing.Size(226, 188);
             this.groupBox4.TabIndex = 3;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Download Manager";
@@ -386,17 +384,6 @@
             this.downMonBtn.TabIndex = 0;
             this.downMonBtn.Text = "Download Monitor";
             this.downMonBtn.UseVisualStyleBackColor = false;
-            // 
-            // localhostAddressTextBox
-            // 
-            this.localhostAddressTextBox.AllowDrop = true;
-            this.localhostAddressTextBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.localhostAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.localhostAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.localhostAddressTextBox.Location = new System.Drawing.Point(6, 92);
-            this.localhostAddressTextBox.Name = "localhostAddressTextBox";
-            this.localhostAddressTextBox.Size = new System.Drawing.Size(121, 22);
-            this.localhostAddressTextBox.TabIndex = 6;
             // 
             // ClientForm
             // 
@@ -459,7 +446,6 @@
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newClientToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startInternalToolStripMenuItem;
-        private System.Windows.Forms.TextBox localhostAddressTextBox;
     }
 }
 
