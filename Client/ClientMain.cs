@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -17,27 +18,10 @@ namespace Client
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ClientForm());
 
-            ClientForm form = new ClientForm();
-            ClientCore core = new ClientCore();
-            /*
-            try
-            {
-                Thread.Sleep(5000);
-
-                // Internal check
-                form.DisplayConnection("Starting internal server.");
-                Debug.WriteLine("Starting internal server.");
-
-                // Create and start threads
-                Thread clientThread = new Thread(core.StartClientThread);
-                clientThread.Start();
+            // Check for file storage directory in the C: drive.
+            if (!Directory.Exists(@"C:\Clinet")){
+                Directory.CreateDirectory(@"C:\Clinet");
             }
-            catch (Exception error)
-            {
-                //errorTextBox.AppendText(error.ToString());
-                form.DisplayError(error.ToString());
-            }
-            */
         }
     }
 }
