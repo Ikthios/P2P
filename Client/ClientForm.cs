@@ -18,7 +18,8 @@ namespace Client
     public partial class ClientForm : Form
     {
         // TcpClient Variable
-        TcpClient tcpClient = new TcpClient();
+        TcpClient tcpServer = new TcpClient();
+        TcpClient tcpPeer = new TcpClient();
         Stream sendStream;
 
         public ClientForm()
@@ -53,7 +54,7 @@ namespace Client
             /*
             Disconnect selection in menu list 'Server'
             */
-            tcpClient.Close();
+            tcpServer.Close();
             connStatBtn.Text = "Disconnected";
             connStatBtn.BackColor = Color.Red;
         }
@@ -111,9 +112,9 @@ namespace Client
             try
             {
                 // Connect to server
-                tcpClient.Connect(servAddress, servPort);
+                tcpServer.Connect(servAddress, servPort);
                 // Send IP address and file list
-                sendStream = tcpClient.GetStream();
+                sendStream = tcpServer.GetStream();
                 String ipString = GetIpAddress();
                 ASCIIEncoding encoding = new ASCIIEncoding();
 
@@ -195,7 +196,7 @@ namespace Client
                 Sending a message to the server
                 */
                 // Return the network stream used to send/receive data
-                sendStream = tcpClient.GetStream();
+                sendStream = tcpServer.GetStream();
 
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 // Encode 'sendString' into a stream of bytes
@@ -246,7 +247,8 @@ namespace Client
                         try
                         {
                             // Stage 1, Send file request to peer (dataString) is already formatted for this
-                            sendStream = tcpClient.GetStream();
+                            tcpPeer.Connect(dataArray[1], int.Parse(dataArray[2]));
+                            sendStream = tcpPeer.GetStream();
                             byte[] streamBytesData = encoding.GetBytes(dataString);
                             sendStream.Write(streamBytesData, 0, streamBytesData.Length);
                             Debug.WriteLine("Stage 2 complete [CLIENTFORM].");
