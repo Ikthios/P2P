@@ -75,7 +75,8 @@ namespace Client
 
                     // Internal check
                     ClientForm clientForm = new ClientForm();
-                    clientForm.DisplayConnection("Constructing file...");
+                    //clientForm.DisplayConnection("Constructing file...");
+                    Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
 
                     // Construct the message structure into byte arrays
                     byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);
@@ -84,13 +85,15 @@ namespace Client
                     byte[] fileNameLength = BitConverter.GetBytes(fileNameByte.Length);
 
                     // Internal check
-                    clientForm.DisplayConnection("Copying file...");
+                    //clientForm.DisplayConnection("Copying file...");
+                    Debug.WriteLine("Copying file [CLIENTTHREADHANDLER].");
                     fileNameLength.CopyTo(clientData, 0);
                     fileNameByte.CopyTo(clientData, 4);
                     fileData.CopyTo(clientData, 4 + fileNameByte.Length);
 
                     // Internal check
-                    clientForm.DisplayConnection("Sending file...");
+                    //clientForm.DisplayConnection("Sending file...");
+                    Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     clientSocket.Send(clientData);
                 }
                 else
