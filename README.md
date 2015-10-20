@@ -38,3 +38,7 @@ the connect button which will connect to and register the peer with the server.
 After starting the client the user will have to perform two tasks, starting the internal server
 to handle peer requests and connecting to the server. After these tasks are performed the user
 can begin to search for files, which will automatically be downloaded by the client.
+
+[To Do]
+1) Peers can receive files sent by other peers but they do not know what to do with it.
+2) UDP alive acknowledgement connection from peer to server.
