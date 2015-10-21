@@ -72,10 +72,9 @@ namespace Client
                 {
                     string fileName = tokens[3];
                     string filePath = "C:\\Clinet\\";
-
+                    
                     // Internal check
                     ClientForm clientForm = new ClientForm();
-                    //clientForm.DisplayConnection("Constructing file...");
                     Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
 
                     // Construct the message structure into byte arrays
@@ -85,15 +84,19 @@ namespace Client
                     byte[] fileNameLength = BitConverter.GetBytes(fileNameByte.Length);
 
                     // Internal check
-                    //clientForm.DisplayConnection("Copying file...");
                     Debug.WriteLine("Copying file [CLIENTTHREADHANDLER].");
+                    // Copy the first 4 bytes, length of the data file, to the clientData
+                    // Start this data at byte 0
                     fileNameLength.CopyTo(clientData, 0);
+                    // Copy the filename to the clientdata, starting at byte 5
                     fileNameByte.CopyTo(clientData, 4);
+                    // Copy the actual file, but the offset needs to be calculated since
+                    //  the length of the filename is unknown
                     fileData.CopyTo(clientData, 4 + fileNameByte.Length);
 
                     // Internal check
-                    //clientForm.DisplayConnection("Sending file...");
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
+                    // Send the file to the requesting peer
                     clientSocket.Send(clientData);
                 }
                 else
@@ -103,9 +106,19 @@ namespace Client
                     This code section will then collect the file, reconstruct it and
                     store it in 'C:\Clinet'.
                     */
+                    byte[] bytes = new byte[1500];
+                    int i = clientSocket.Receive(bytes);
 
+                    // Build the message
+                    for (int j = 0; j < i; j++)
+                    {
+                        dataString += Convert.ToChar(b[i]);
+                    }
+
+                    // Print the filename to the debug console
+                    Debug.WriteLine(dataString);
                 }
-            }
+            }   // End while loop
         }
 
         private string GetIpAddress()
