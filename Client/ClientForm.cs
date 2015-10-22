@@ -76,7 +76,8 @@ namespace Client
                 ClientCore core = new ClientCore();
 
                 // Internal check
-                DisplayConnection("Starting internal server.");
+                //DisplayConnection("Starting internal server.");
+                DisplayConnection = ("Starting internal server.");
                 Debug.WriteLine("Starting internal server.");
 
                 // Create and start threads
@@ -182,6 +183,8 @@ namespace Client
         */
         private void fileSearchBtn_Click(object sender, EventArgs e)
         {
+            ClientThreadHandler cth = new ClientThreadHandler();
+
             // User entered string to send to the server
             /*
             The 'CFR' keyword is used by the server to identify that this is a request call
@@ -191,83 +194,7 @@ namespace Client
             // Clear the textbox
             fileSearchBox.Text = "";
 
-            try {
-                /*
-                Sending a message to the server
-                */
-                // Return the network stream used to send/receive data
-                sendStream = tcpServer.GetStream();
-
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                // Encode 'sendString' into a stream of bytes
-                byte[] streamBytesA = encoding.GetBytes(sendString);
-
-                // Advance current position in this stream by # of bytes written
-                sendStream.Write(streamBytesA, 0, streamBytesA.Length);
-
-                Boolean loop = true;
-                while (loop)
-                {
-                    /*
-                    Reading a message from the server
-                    */
-                    Debug.WriteLine("Receiving data from server [CLIENTFORM].");
-                    byte[] streamBytesB = new byte[100];
-                    int i = sendStream.Read(streamBytesB, 0, 100);
-                    string dataString = "";
-
-                    for (int j = 0; j < i; j++)
-                    {
-                        //Console.Write(Convert.ToChar(streamBytesB[j]));
-                        dataString += Convert.ToChar(streamBytesB[j]);
-                    }
-
-                    /*
-                    If the received data is related to a peer request then
-                    here is where the return string from the server will be
-                    parsed, split and handled accordingly.
-                    [0] = Keyword
-                    [1] = IP Address
-                    [2] = Port of requesting client
-                    [3] = Request filename
-                    */
-                    string[] dataArray = dataString.Split(',');
-
-                    if (dataArray[0].Equals("SCL"))
-                    {
-                        // Print server message in peer listing text box
-                        //peerListBox.AppendText(dataString + "\n");
-                        loop = false;
-                    }
-                    else if(dataArray[0].Equals("PPR"))
-                    {
-                        // PPR, Peer IP, Peer internal host port, File to be Requested
-                        peerListBox.AppendText(dataString + "\n");
-
-                        try
-                        {
-                            // Stage 1, Send file request to peer (dataString) is already formatted for this
-                            tcpPeer.Connect(dataArray[1], int.Parse(dataArray[2]));
-                            sendStream = tcpPeer.GetStream();
-                            byte[] streamBytesData = encoding.GetBytes(dataString);
-                            sendStream.Write(streamBytesData, 0, streamBytesData.Length);
-                            Debug.WriteLine("Stage 2 complete [CLIENTFORM].");
-                        }catch(Exception error)
-                        {
-                            Debug.WriteLine("Stage 1 error: " + error.ToString());
-                        }
-                    }
-                    else
-                    {
-                        // Print server message in peer listing text box
-                        peerListBox.AppendText(dataString + "\n");
-                    }
-                }
-            }
-            catch(Exception error)
-            {
-                errorTextBox.AppendText(DateTime.Now + "Data failed to send.");
-            }
+            cth.FileSearch(tcpServer, sendString);
         }
 
         public string GetIpAddress()
@@ -287,9 +214,10 @@ namespace Client
             return ipAddress.ToString();
         }
 
-        public void DisplayConnection(string message)
+        public string DisplayConnection
         {
-            peerListBox.AppendText(message + "\n");
+            get { return peerListBox.Text; }
+            set { peerListBox.AppendText(value); }
         }
 
         public void DisplayError(string sentError)

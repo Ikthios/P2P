@@ -47,7 +47,8 @@ namespace Client
                 // Internal check
                 Debug.WriteLine("Starting listener [CLIENTCORE].");
                 // Start listening on client port
-                clientForm.DisplayConnection("Starting client listener on port " + port);
+                //clientForm.DisplayConnection("Starting client listener on port " + port);
+                clientForm.DisplayConnection = ("Starting client listener on port " + port);
                 listener.Start();
                 
                 // Internal check

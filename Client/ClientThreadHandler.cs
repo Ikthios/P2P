@@ -8,14 +8,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Client
 {
-    class ClientThreadHandler
+    class ClientThreadHandler : ClientForm
     {
         // Global variables
         private Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
+        // Default constructor
+        public ClientThreadHandler() { }
+
+        // Overloaded constructor
         public ClientThreadHandler(Socket client)
         {
             this.clientSocket = client;
@@ -136,6 +141,115 @@ namespace Client
             }
 
             return ipAddress.ToString();
+        }
+
+        public void FileSearch(TcpClient tcpServer, string sendString)
+        {
+            // TcpClient Variables
+            TcpClient tcpPeer = new TcpClient();
+
+            // GUI Form Variables
+            ClientForm form = new ClientForm();
+
+            try
+            {
+                /*
+                Sending a message to the server
+                */
+                // Return the network stream used to send/receive data
+                Stream sendStream = tcpServer.GetStream();
+
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                // Encode 'sendString' into a stream of bytes
+                byte[] streamBytesA = encoding.GetBytes(sendString);
+
+                // Advance current position in this stream by # of bytes written
+                sendStream.Write(streamBytesA, 0, streamBytesA.Length);
+
+                Boolean loop = true;
+                while (loop)
+                {
+                    /*
+                    Reading a message from the server
+                    */
+                    Debug.WriteLine("Receiving data from server [CLIENTFORM].");
+                    byte[] streamBytesB = new byte[1500];
+                    int i = sendStream.Read(streamBytesB, 0, 100);
+                    string dataString = "";
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        //Console.Write(Convert.ToChar(streamBytesB[j]));
+                        dataString += Convert.ToChar(streamBytesB[j]);
+                    }
+
+                    /*
+                    If the received data is related to a peer request then
+                    here is where the return string from the server will be
+                    parsed, split and handled accordingly.
+                    [0] = Keyword
+                    [1] = IP Address
+                    [2] = Port of requesting client
+                    [3] = Request filename
+                    */
+                    string[] dataArray = dataString.Split(',');
+
+                    if (dataArray[0].Equals("SCL"))
+                    {
+                        // Print server message in peer listing text box
+                        //peerListBox.AppendText(dataString + "\n");
+                        loop = false;
+                    }
+                    else if (dataArray[0].Equals("PPR"))
+                    {
+                        // PPR, Peer IP, Peer internal host port, File to be Requested
+                        //form.peerListBox.AppendText(dataString + "\n");
+                        form.DisplayConnection = (dataString);
+
+                        try
+                        {
+                            // Stage 1, Send file request to peer (dataString) is already formatted for this
+                            tcpPeer.Connect(dataArray[1], int.Parse(dataArray[2]));
+                            sendStream = tcpPeer.GetStream();
+                            byte[] streamBytesData = encoding.GetBytes(dataString);
+                            sendStream.Write(streamBytesData, 0, streamBytesData.Length);
+                            Debug.WriteLine("Stage 2 complete [CLIENTTHREADHANDLER].");
+                        }
+                        catch (Exception error)
+                        {
+                            Debug.WriteLine("Stage 1 error: " + error.ToString());
+                        }
+                    }
+                    else
+                    {
+                        string[] tokens = sendString.Split(',');
+
+                        using (var stream = tcpPeer.GetStream())
+                        using (var output = File.Create(@"C:\Clinet\" + tokens[1]))
+                        {
+                            Debug.WriteLine("Receiving file [CLIENTTHREADHANDLER]");
+
+                            // Read the file in chunks of 1KB
+                            var buffer = new byte[1024];
+                            int bytesread;
+                            while((bytesread = stream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                // Create and print the file to the storage folder.
+                                output.Write(buffer, 0, bytesread);
+                            }
+
+                            Debug.WriteLine("File created, closing connection [CLIENTTHREADHANDLER]");
+                            stream.Close();
+                            tcpPeer.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                //errorTextBox.AppendText(DateTime.Now + "Data failed to send.");
+                form.DisplayError(DateTime.Now + "Data failed to send.");
+            }
         }
     }
 }
