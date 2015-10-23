@@ -15,18 +15,7 @@ namespace Server
         {
             // Class variables
             ServerCore servCore = new ServerCore();
-
-            // Get user input for the ip address and port number
-            /*
-            Console.WriteLine("Enter the hosting IP.");
-            String ipString = Console.ReadLine();
-            Console.WriteLine("Enter the hosting port.");
-            String portString = Console.ReadLine();
-            */
-
-            //string ipString = servCore.GetIpAddress();
             IPAddress ipaddress = IPAddress.Parse(servCore.GetIpAddress());
-            //int port = int.Parse(portString);
             int port = 6000;
 
             Console.WriteLine("Server running at " + ipaddress.ToString() + ":" + port);

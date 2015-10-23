@@ -20,7 +20,6 @@ namespace Client
         // TcpClient Variable
         TcpClient tcpServer = new TcpClient();
         TcpClient tcpPeer = new TcpClient();
-        Stream sendStream;
 
         public ClientForm()
         {
@@ -112,62 +111,8 @@ namespace Client
 
             try
             {
-                // Connect to server
-                tcpServer.Connect(servAddress, servPort);
-                // Send IP address and file list
-                sendStream = tcpServer.GetStream();
-                String ipString = GetIpAddress();
-                ASCIIEncoding encoding = new ASCIIEncoding();
-
-                /*
-                Read the directory "C:\Clinet" for filenames and add them to a string array.
-                Then add the contents of the string array to a single comman separated value,
-                add it to the encoded stream and send it to the server for registration.
-                */
-                string[] filenameArray = Directory.GetFiles(@"C:\Clinet")
-                    .Select(path => Path.GetFileName(path))
-                    .ToArray();
-                string fileString = "";
-                foreach(string token in filenameArray)
-                {
-                    fileString += (token + ',');
-                }
-                /*
-                The 'REG' keyword is used by the server to identify that this is a registration call
-                made by the client form and that it is to be registered in the serverside database.
-                */
-                byte[] streamBytesIp = encoding.GetBytes("REG," + ipString + ',' + fileString);
-                sendStream.Write(streamBytesIp, 0, streamBytesIp.Length);
-
-                Boolean loop = true;
-                while (loop)
-                {
-                    /*
-                    Reading a message from the server
-                    */
-                    byte[] streamBytesB = new byte[100];
-                    int i = sendStream.Read(streamBytesB, 0, 100);
-                    string dataString = "";
-
-                    for (int j = 0; j < i; j++)
-                    {
-                        //Console.Write(Convert.ToChar(streamBytesB[j]));
-                        dataString += Convert.ToChar(streamBytesB[j]);
-                    }
-
-                    if (dataString.Equals("SCL"))
-                    {
-                        // Print server message in peer listing text box
-                        //peerListBox.AppendText(dataString + "\n");
-                        loop = false;
-                    }
-                    else
-                    {
-                        // Print server message in peer listing text box
-                        peerListBox.AppendText(dataString + "\n");
-                    }
-                }
-
+                ClientThreadHandler cth = new ClientThreadHandler();
+                cth.ServerConnect(tcpServer, servAddress, servPort);
             }
             catch (Exception error)
             {
