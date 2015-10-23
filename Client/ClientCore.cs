@@ -17,11 +17,14 @@ namespace Client
 
         public void StartClientThread()
         {
-            ClientForm form = new ClientForm();
-            StartClientServer(form.GetIpAddress(), 5500);
-            
+            ClientThreadHandler cth = new ClientThreadHandler();
+            string ipAddress = cth.GetIpAddress();
+            int port = 5500;
+
             // Internal check
-            Debug.WriteLine("Starting client thread at " + form.GetIpAddress() + " [CLIENTCORE].");
+            Debug.WriteLine("Starting client thread at " + ipAddress + ":" + port + " [CLIENTCORE].");
+
+            StartClientServer(ipAddress, port);
         }
 
         public void StartClientServer(String ip, int port)
@@ -47,8 +50,7 @@ namespace Client
                 // Internal check
                 Debug.WriteLine("Starting listener [CLIENTCORE].");
                 // Start listening on client port
-                //clientForm.DisplayConnection("Starting client listener on port " + port);
-                clientForm.DisplayConnection = ("Starting client listener on port " + port);
+                Debug.WriteLine("Starting client listener on port " + port + "[CLIENTCORE]");
                 listener.Start();
                 
                 // Internal check
