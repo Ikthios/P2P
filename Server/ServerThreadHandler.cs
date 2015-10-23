@@ -38,7 +38,7 @@ namespace Server
                 {
                     Console.WriteLine("Connection accepted from " + clientSocket.RemoteEndPoint);
 
-                    byte[] b = new byte[100];           // Create byte array for receiving client data
+                    byte[] b = new byte[1500];           // Create byte array for receiving client data
                     int csr = clientSocket.Receive(b);  // Receive the client data
                     Console.WriteLine("Received connection...");
                     string dataString = "";     // This will hold the raw data coming in from the connected peer
@@ -114,19 +114,17 @@ namespace Server
 
         private string GetIpAddress()
         {
-            string ipAddress = String.Empty;
-            // Get all IP addresses using the local hostname
-            foreach (IPAddress ipa in Dns.GetHostAddresses(Dns.GetHostName()))
+            IPHostEntry host;
+            string localIp = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress address in host.AddressList)
             {
-                if (ipa.AddressFamily == AddressFamily.InterNetwork)
+                if (address.AddressFamily.ToString() == "InterNetwork")
                 {
-                    // Grab the first IP address that matches the local IP address
-                    ipAddress = ipa.ToString();
-                    break;
+                    localIp = address.ToString();
                 }
             }
-
-            return ipAddress.ToString();
+            return localIp;
         }
     }
 }

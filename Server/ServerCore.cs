@@ -17,14 +17,19 @@ namespace Server
             ServerCore servCore = new ServerCore();
 
             // Get user input for the ip address and port number
+            /*
             Console.WriteLine("Enter the hosting IP.");
             String ipString = Console.ReadLine();
             Console.WriteLine("Enter the hosting port.");
             String portString = Console.ReadLine();
+            */
 
             //string ipString = servCore.GetIpAddress();
-            IPAddress ipaddress = IPAddress.Parse(ipString);
-            int port = int.Parse(portString);
+            IPAddress ipaddress = IPAddress.Parse(servCore.GetIpAddress());
+            //int port = int.Parse(portString);
+            int port = 6000;
+
+            Console.WriteLine("Server running at " + ipaddress.ToString() + ":" + port);
 
             // Initialize the listener
             TcpListener listener = new TcpListener(ipaddress, port);
@@ -50,6 +55,21 @@ namespace Server
             {
                 Console.WriteLine(error.ToString());
             }
+        }
+
+        private string GetIpAddress()
+        {
+            IPHostEntry host;
+            string localIp = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress address in host.AddressList)
+            {
+                if (address.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIp = address.ToString();
+                }
+            }
+            return localIp;
         }
     }
 }

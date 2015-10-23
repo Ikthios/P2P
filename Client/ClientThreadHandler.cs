@@ -79,9 +79,8 @@ namespace Client
                     string fileName = tokens[3];
                     
                     // Internal check
-                    ClientForm clientForm = new ClientForm();
                     Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
-
+                    
                     // Construct the message structure into byte arrays
                     byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);
                     byte[] fileData = File.ReadAllBytes(filePath + fileName);
@@ -101,35 +100,17 @@ namespace Client
 
                     // Internal check
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
-                    // Send the file to the requesting peer
-                    //clientSocket.Send(clientData);
-
                     try
                     {
+                        // Send the file to the requesting peer
                         clientSocket.SendFile(filePath + fileName);
+                        clientSocket.Close();
                     }catch(Exception error)
                     {
                         Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
                     }
                 }
             }   // End while loop
-        }
-
-        private string GetIpAddress()
-        {
-            string ipAddress = String.Empty;
-            // Get all IP addresses using the local hostname
-            foreach (IPAddress ipa in Dns.GetHostAddresses(Dns.GetHostName()))
-            {
-                if (ipa.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    // Grab the first IP address that matches the local IP address
-                    ipAddress = ipa.ToString();
-                    break;
-                }
-            }
-
-            return ipAddress.ToString();
         }
 
         public void FileSearch(TcpClient tcpServer, string sendString)
@@ -245,6 +226,21 @@ namespace Client
                 //errorTextBox.AppendText(DateTime.Now + "Data failed to send.");
                 form.DisplayError(DateTime.Now + "Data failed to send.");
             }
+        }
+
+        private string GetIpAddress()
+        {
+            IPHostEntry host;
+            string localIp = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress address in host.AddressList)
+            {
+                if (address.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIp = address.ToString();
+                }
+            }
+            return localIp;
         }
     }
 }

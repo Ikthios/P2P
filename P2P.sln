@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{3B8C6943-B3AF-4465-BE00-E2AC781AC087}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIClient", "GUIClient\GUIClient.csproj", "{8F79625A-77C8-4770-8F29-3070EDDC2BEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIServer", "GUIServer\GUIServer.csproj", "{7E9A63FC-CD89-4EC9-AF95-7970707120FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3B8C6943-B3AF-4465-BE00-E2AC781AC087}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B8C6943-B3AF-4465-BE00-E2AC781AC087}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B8C6943-B3AF-4465-BE00-E2AC781AC087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F79625A-77C8-4770-8F29-3070EDDC2BEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F79625A-77C8-4770-8F29-3070EDDC2BEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F79625A-77C8-4770-8F29-3070EDDC2BEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F79625A-77C8-4770-8F29-3070EDDC2BEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E9A63FC-CD89-4EC9-AF95-7970707120FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E9A63FC-CD89-4EC9-AF95-7970707120FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E9A63FC-CD89-4EC9-AF95-7970707120FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E9A63FC-CD89-4EC9-AF95-7970707120FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
