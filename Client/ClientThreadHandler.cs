@@ -103,7 +103,14 @@ namespace Client
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     // Send the file to the requesting peer
                     //clientSocket.Send(clientData);
-                    clientSocket.SendFile(filePath + fileName);
+
+                    try
+                    {
+                        clientSocket.SendFile(filePath + fileName);
+                    }catch(Exception error)
+                    {
+                        Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
+                    }
                 }
             }   // End while loop
         }
@@ -186,7 +193,7 @@ namespace Client
                     {
                         // PPR, Peer IP, Peer internal host port, File to be Requested
                         //form.peerListBox.AppendText(dataString + "\n");
-                        form.DisplayConnection = (dataString);
+                        Debug.WriteLine(dataString + " [CLIENTTHREADHANDLER]");
 
                         try
                         {
