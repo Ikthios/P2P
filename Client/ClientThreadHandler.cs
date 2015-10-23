@@ -75,8 +75,8 @@ namespace Client
                 */
                 if (tokens[0].Equals("PPR"))
                 {
-                    string fileName = tokens[3];
                     string filePath = "C:\\Clinet\\";
+                    string fileName = tokens[3];
                     
                     // Internal check
                     ClientForm clientForm = new ClientForm();
@@ -102,26 +102,8 @@ namespace Client
                     // Internal check
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     // Send the file to the requesting peer
-                    clientSocket.Send(clientData);
-                }
-                else
-                {
-                    /*
-                    If the datastring consists of a file there will be no keyword.
-                    This code section will then collect the file, reconstruct it and
-                    store it in 'C:\Clinet'.
-                    */
-                    byte[] bytes = new byte[1500];
-                    int i = clientSocket.Receive(bytes);
-
-                    // Build the message
-                    for (int j = 0; j < i; j++)
-                    {
-                        dataString += Convert.ToChar(b[i]);
-                    }
-
-                    // Print the filename to the debug console
-                    Debug.WriteLine(dataString);
+                    //clientSocket.Send(clientData);
+                    clientSocket.SendFile(filePath + fileName);
                 }
             }   // End while loop
         }
@@ -222,25 +204,31 @@ namespace Client
                     }
                     else
                     {
-                        string[] tokens = sendString.Split(',');
-
-                        using (var stream = tcpPeer.GetStream())
-                        using (var output = File.Create(@"C:\Clinet\" + tokens[1]))
+                        try
                         {
-                            Debug.WriteLine("Receiving file [CLIENTTHREADHANDLER]");
+                            string[] tokens = sendString.Split(',');
 
-                            // Read the file in chunks of 1KB
-                            var buffer = new byte[1024];
-                            int bytesread;
-                            while((bytesread = stream.Read(buffer, 0, buffer.Length)) > 0)
+                            using (var stream = tcpPeer.GetStream())
+                            using (var output = File.Create(@"C:\Clinet\" + tokens[1]))
                             {
-                                // Create and print the file to the storage folder.
-                                output.Write(buffer, 0, bytesread);
-                            }
+                                Debug.WriteLine("Receiving file [CLIENTTHREADHANDLER]");
 
-                            Debug.WriteLine("File created, closing connection [CLIENTTHREADHANDLER]");
-                            stream.Close();
-                            tcpPeer.Close();
+                                // Read the file in chunks of 1KB
+                                var buffer = new byte[1024];
+                                int bytesread;
+                                while((bytesread = stream.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    // Create and print the file to the storage folder.
+                                    output.Write(buffer, 0, bytesread);
+                                }
+
+                                Debug.WriteLine("File created, closing connection [CLIENTTHREADHANDLER]");
+                                stream.Close();
+                                tcpPeer.Close();
+                            }
+                        }catch(Exception error)
+                        {
+                            Debug.WriteLine("File receiver: " + error.ToString());
                         }
                     }
                 }
