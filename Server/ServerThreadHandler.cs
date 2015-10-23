@@ -23,12 +23,12 @@ namespace Server
         public void StartHandling()
         {
             Console.WriteLine("Accepting connection.\nStarting handler...");
-            Thread handler = new Thread(clientHandler);
+            Thread handler = new Thread(ServerHandler);
             handler.Priority = ThreadPriority.AboveNormal;
             handler.Start();
         }
 
-        private void clientHandler()
+        private void ServerHandler()
         {
             Boolean loop = true;
             ASCIIEncoding encoding = new ASCIIEncoding();
@@ -79,7 +79,6 @@ namespace Server
                     else if (tokens[0].Equals("CFR"))
                     {
                         // Search data list for files
-                        //clientSocket.Send(encoding.GetBytes("File search for " + tokens[1] + " received."));
                         Console.WriteLine("File search for " + tokens[1] + " received.");
                         string hostingPeer = servDB.RetreivePeer(dataString.Remove(0,4));   // Remove the 'CFR' keyword
                         clientSocket.Send(encoding.GetBytes(hostingPeer));

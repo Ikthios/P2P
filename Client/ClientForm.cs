@@ -96,11 +96,11 @@ namespace Client
             }
         }
 
-        /*
-        Connection status button code
-        */
         private void connStatBtn_Click(object sender, EventArgs e)
         {
+            /*
+            Connection status button code
+            */
             // Get server IP and port number
             string servAddress = addressTextBox.Text;
             string portString = portComboBox.GetItemText(portComboBox.SelectedItem);
@@ -178,11 +178,11 @@ namespace Client
             }
         }
 
-        /*
-        File search button code
-        */
         private void fileSearchBtn_Click(object sender, EventArgs e)
         {
+            /*
+            File search button code
+            */
             ClientThreadHandler cth = new ClientThreadHandler();
 
             // User entered string to send to the server
@@ -197,21 +197,19 @@ namespace Client
             cth.FileSearch(tcpServer, sendString);
         }
 
-        public string GetIpAddress()
+        private string GetIpAddress()
         {
-            string ipAddress = String.Empty;
-            // Get all IP addresses using the local hostname
-            foreach (IPAddress ipa in Dns.GetHostAddresses(Dns.GetHostName()))
+            IPHostEntry host;
+            string localIp = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress address in host.AddressList)
             {
-                if (ipa.AddressFamily == AddressFamily.InterNetwork)
+                if (address.AddressFamily.ToString() == "InterNetwork")
                 {
-                    // Grab the first IP address that matches the local IP address
-                    ipAddress = ipa.ToString();
-                    break;
+                    localIp = address.ToString();
                 }
             }
-
-            return ipAddress.ToString();
+            return localIp;
         }
 
         public string DisplayConnection

@@ -15,7 +15,7 @@ namespace Client
     class ClientThreadHandler : ClientForm
     {
         // Global variables
-        private Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private Socket TcpClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         // Default constructor
         public ClientThreadHandler() { }
@@ -23,7 +23,7 @@ namespace Client
         // Overloaded constructor
         public ClientThreadHandler(Socket client)
         {
-            this.clientSocket = client;
+            this.TcpClientSocket = client;
         }
 
         public void StartHandling()
@@ -50,7 +50,7 @@ namespace Client
             {
                 byte[] b = new byte[1500];          // Create byte array for receiving client data
                                                     // 1500 bytes is the standard TCP file transfer size
-                int csr = clientSocket.Receive(b);  // Receive the peer data
+                int csr = TcpClientSocket.Receive(b);  // Receive the peer data
                 string dataString = "";             // This will hold the raw data coming in from the connected peer
 
                 // Build the message
@@ -80,31 +80,20 @@ namespace Client
                     
                     // Internal check
                     Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
-                    
-                    // Construct the message structure into byte arrays
-                    byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);
-                    byte[] fileData = File.ReadAllBytes(filePath + fileName);
-                    byte[] clientData = new byte[4 + fileNameByte.Length + fileData.Length];
-                    byte[] fileNameLength = BitConverter.GetBytes(fileNameByte.Length);
 
-                    // Internal check
-                    Debug.WriteLine("Copying file [CLIENTTHREADHANDLER].");
-                    // Copy the first 4 bytes, length of the data file, to the clientData
-                    // Start this data at byte 0
-                    fileNameLength.CopyTo(clientData, 0);
-                    // Copy the filename to the clientdata, starting at byte 5
-                    fileNameByte.CopyTo(clientData, 4);
-                    // Copy the actual file, but the offset needs to be calculated since
-                    //  the length of the filename is unknown
-                    fileData.CopyTo(clientData, 4 + fileNameByte.Length);
+                    TcpClient sendPeer = new TcpClient(tokens[1], int.Parse(tokens[2]));
+                    Stream peerStream = sendPeer.GetStream();
+                    byte[] fileArray = File.ReadAllBytes(filePath + fileName);
+                    peerStream.Write(fileArray, 0, fileArray.Length);
+                    sendPeer.Close();
+                    Debug.WriteLine("File transferred [CLIENTTHREADHANDLER]");
 
                     // Internal check
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     try
                     {
                         // Send the file to the requesting peer
-                        clientSocket.SendFile(filePath + fileName);
-                        clientSocket.Close();
+                        //clientSocket.SendFile(filePath + fileName);
                     }catch(Exception error)
                     {
                         Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
@@ -115,12 +104,6 @@ namespace Client
 
         public void FileSearch(TcpClient tcpServer, string sendString)
         {
-            // TcpClient Variables
-            TcpClient tcpPeer = new TcpClient();
-
-            // GUI Form Variables
-            ClientForm form = new ClientForm();
-
             try
             {
                 /*
@@ -136,6 +119,8 @@ namespace Client
                 // Advance current position in this stream by # of bytes written
                 sendStream.Write(streamBytesA, 0, streamBytesA.Length);
 
+                sendStream.Close();
+                
                 Boolean loop = true;
                 while (loop)
                 {
@@ -149,7 +134,6 @@ namespace Client
 
                     for (int j = 0; j < i; j++)
                     {
-                        //Console.Write(Convert.ToChar(streamBytesB[j]));
                         dataString += Convert.ToChar(streamBytesB[j]);
                     }
 
@@ -158,77 +142,44 @@ namespace Client
                     here is where the return string from the server will be
                     parsed, split and handled accordingly.
                     [0] = Keyword
-                    [1] = IP Address
-                    [2] = Port of requesting client
+                    [1] = IP Address (Outside peer)
+                    [2] = Port of requesting client (Outside Peer)
                     [3] = Request filename
                     */
+                    
                     string[] dataArray = dataString.Split(',');
 
                     if (dataArray[0].Equals("SCL"))
                     {
-                        // Print server message in peer listing text box
-                        //peerListBox.AppendText(dataString + "\n");
                         loop = false;
                     }
                     else if (dataArray[0].Equals("PPR"))
                     {
-                        // PPR, Peer IP, Peer internal host port, File to be Requested
-                        //form.peerListBox.AppendText(dataString + "\n");
-                        Debug.WriteLine(dataString + " [CLIENTTHREADHANDLER]");
-
                         try
                         {
+                            TcpClient tcpPeer = new TcpClient();
+
                             // Stage 1, Send file request to peer (dataString) is already formatted for this
                             tcpPeer.Connect(dataArray[1], int.Parse(dataArray[2]));
                             sendStream = tcpPeer.GetStream();
                             byte[] streamBytesData = encoding.GetBytes(dataString);
+                            // Sending Format: [PPR Keyword, Peer IP, Peer internal host port, File to be Requested]
                             sendStream.Write(streamBytesData, 0, streamBytesData.Length);
-                            Debug.WriteLine("Stage 2 complete [CLIENTTHREADHANDLER].");
                         }
                         catch (Exception error)
                         {
                             Debug.WriteLine("Stage 1 error: " + error.ToString());
                         }
                     }
-                    else
-                    {
-                        try
-                        {
-                            string[] tokens = sendString.Split(',');
-
-                            using (var stream = tcpPeer.GetStream())
-                            using (var output = File.Create(@"C:\Clinet\" + tokens[1]))
-                            {
-                                Debug.WriteLine("Receiving file [CLIENTTHREADHANDLER]");
-
-                                // Read the file in chunks of 1KB
-                                var buffer = new byte[1024];
-                                int bytesread;
-                                while((bytesread = stream.Read(buffer, 0, buffer.Length)) > 0)
-                                {
-                                    // Create and print the file to the storage folder.
-                                    output.Write(buffer, 0, bytesread);
-                                }
-
-                                Debug.WriteLine("File created, closing connection [CLIENTTHREADHANDLER]");
-                                stream.Close();
-                                tcpPeer.Close();
-                            }
-                        }catch(Exception error)
-                        {
-                            Debug.WriteLine("File receiver: " + error.ToString());
-                        }
-                    }
                 }
             }
             catch (Exception error)
             {
-                //errorTextBox.AppendText(DateTime.Now + "Data failed to send.");
-                form.DisplayError(DateTime.Now + "Data failed to send.");
+                Debug.WriteLine(error.ToString());
             }
         }
 
-        private string GetIpAddress()
+        public string GetIpAddress()
         {
             IPHostEntry host;
             string localIp = "?";
