@@ -82,7 +82,7 @@ namespace Client
                     fileData.CopyTo(clientData, 4 + fnByte.Length);
 
                     // Internal check
-                    Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
+                    Debug.WriteLine("Sending file to " + tokens[1] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
                     try
                     {
                         // Connect to the peer
