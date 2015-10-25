@@ -102,7 +102,7 @@ namespace Server
                 }
             }
 
-            Stop(); // Stop the client socket connection
+            //Stop(); // Stop the client socket connection
         }
 
         private void Stop()

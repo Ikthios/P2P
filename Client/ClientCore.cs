@@ -46,8 +46,8 @@ namespace Client
                 while (loop)
                 {
                     Socket newClient = listener.AcceptSocket();
-                    ClientThreadHandler clientThread = new ClientThreadHandler(newClient);
-                    clientThread.StartHandling();
+                    ClientThreadHandler cth = new ClientThreadHandler(newClient);
+                    cth.StartHandling();
                 }
             }catch(Exception error)
             {

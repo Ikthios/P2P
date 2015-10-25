@@ -72,14 +72,12 @@ namespace Client
         {
             try
             {
-                ClientCore core = new ClientCore();
-
                 // Internal check
-                //DisplayConnection("Starting internal server.");
                 DisplayConnection = ("Starting internal server.");
                 Debug.WriteLine("Starting internal server.");
 
                 // Create and start threads
+                ClientCore core = new ClientCore();
                 Thread clientThread = new Thread(core.StartClientThread);
                 clientThread.Start();
 
@@ -130,12 +128,13 @@ namespace Client
             */
             ClientThreadHandler cth = new ClientThreadHandler();
 
-            // User entered string to send to the server
             /*
+            (C)lient (F)ile (R)equest
             The 'CFR' keyword is used by the server to identify that this is a request call
             made by the client form for a file hosted by another client.
             */
             String sendString = "CFR," + fileSearchBox.Text;
+
             // Clear the textbox
             fileSearchBox.Text = "";
 
