@@ -78,9 +78,15 @@ namespace Server
                     }
                     else if (tokens[0].Equals("CFR"))
                     {
+                        /*
+                        CFR Request
+                        [0] = Keyword
+                        [1] = Requested File
+                        [2] = Requesting Peer IP Address
+                        */
                         // Search data list for files
                         Console.WriteLine("File search for " + tokens[1] + " received.");
-                        string hostingPeer = servDB.RetreivePeer(dataString.Remove(0,4));   // Remove the 'CFR' keyword
+                        string hostingPeer = servDB.RetreivePeer(tokens[2], dataString.Remove(0,4));   // Remove the 'CFR' keyword
                         clientSocket.Send(encoding.GetBytes(hostingPeer));
                         clientSocket.Send(encoding.GetBytes("SCL"));
                     }

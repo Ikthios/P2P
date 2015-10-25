@@ -133,7 +133,7 @@ namespace Client
             The 'CFR' keyword is used by the server to identify that this is a request call
             made by the client form for a file hosted by another client.
             */
-            String sendString = "CFR," + fileSearchBox.Text;
+            String sendString = "CFR," + fileSearchBox.Text + "," + GetIpAddress();
 
             // Clear the textbox
             fileSearchBox.Text = "";

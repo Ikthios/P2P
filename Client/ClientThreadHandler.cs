@@ -55,9 +55,10 @@ namespace Client
                 This will split/organize the raw data into a format
                 the peer server can understand.
                 [0] = Keyword
-                [1] = IP Address of requesting client
-                [2] = Port of requesting client
+                [1] = IP Address of hosting peer
+                [2] = Port of requesting peer
                 [3] = Request filename
+                [4] = IP Address of requesting peer
                 */
                 string[] tokens = dataString.Split(',');
 
@@ -82,11 +83,11 @@ namespace Client
                     fileData.CopyTo(clientData, 4 + fnByte.Length);
 
                     // Internal check
-                    Debug.WriteLine("Sending file to " + tokens[1] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
+                    Debug.WriteLine("Sending file to " + tokens[4] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
                     try
                     {
                         // Connect to the peer
-                        TcpPeerSocket.Connect(tokens[1], int.Parse(tokens[2]));
+                        TcpPeerSocket.Connect(tokens[4], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
                         TcpPeerSocket.Send(clientData);
                     }catch(Exception error)
@@ -122,7 +123,7 @@ namespace Client
 
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 // Encode 'sendString' into a stream of bytes
-                // sendString = "CFR,filename.extension"
+                // sendString = "CFR,filename.extension,clientIPAddress
                 byte[] streamBytesA = encoding.GetBytes(sendString);
 
                 // Advance current position in this stream by # of bytes written

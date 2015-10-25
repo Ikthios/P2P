@@ -54,7 +54,7 @@ namespace Server
         /*
         Return the peer matching the request search term.
         */
-        public string RetreivePeer(string file)
+        public string RetreivePeer(string peerIp, string file)
         {
             string returnAddress = "";
             //string searchFile = file.Remove(0, 1);  // Removes the leading comma (',')
@@ -72,7 +72,7 @@ namespace Server
                 }
             }
             //                     Key      IP Address      Port       Filename
-            string returnString = ("PPR," + returnAddress + ",5500," + searchFile);
+            string returnString = ("PPR," + returnAddress + ",5500," + searchFile + "," + peerIp);
 
             if (returnAddress.Equals(""))
             {
