@@ -94,6 +94,7 @@ namespace Client
                         {
                             // Close the peer socket after the data has been sent
                             TcpPeerSocket.Close();
+                            loop = false;
                         }
                         catch(Exception error)
                         {
@@ -127,11 +128,12 @@ namespace Client
                             // Kill the BinaryWriter and close the socket after the file has been received.
                             Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
                             bWrite.Close();
-                            //TcpClientSocket.Close();
+                            TcpClientSocket.Close();
+                            loop = false;
                         }
                         catch(Exception error)
                         {
-                            Debug.WriteLine("Loop kill error [CLIENTTHREADHANDLER] " + error.ToString());
+                            Debug.WriteLine("BinaryWriter kill error [CLIENTTHREADHANDLER] " + error.ToString());
                         }
                     }
                     catch(Exception error)
