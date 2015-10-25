@@ -124,9 +124,10 @@ namespace Client
 
                         try
                         {
-                            // Kill the loop when all information swapping has completed
-                            Debug.WriteLine("Killing client request loop [CLIENTTHREADHANDLER].");
-                            loop = false;
+                            // Kill the BinaryWriter and close the socket after the file has been received.
+                            Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
+                            bWrite.Close();
+                            //TcpClientSocket.Close();
                         }
                         catch(Exception error)
                         {
