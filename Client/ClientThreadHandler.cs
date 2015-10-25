@@ -142,7 +142,6 @@ namespace Client
                         loop = false;
                     }
                 }
-                loop = true;
             }   // End while loop
         }
 
