@@ -15,8 +15,8 @@ namespace Client
     class ClientThreadHandler : ClientForm
     {
         // Global variables
-        private Socket TcpClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        private Socket TcpPeerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private Socket TcpClientSocket;
+        private Socket TcpPeerSocket;
 
         // Default constructor
         public ClientThreadHandler() { }
@@ -40,6 +40,8 @@ namespace Client
             ASCIIEncoding encoding = new ASCIIEncoding();
             while (loop)
             {
+                TcpClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
                 byte[] dataArray = new byte[1500];              // Create byte array for receiving client data
                                                                 // 1500 bytes is the standard TCP file transfer size
                 int csr = TcpClientSocket.Receive(dataArray);   // Receive the peer data
@@ -84,6 +86,8 @@ namespace Client
 
                     try
                     {
+                        TcpPeerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
                         // Connect to the peer
                         TcpPeerSocket.Connect(tokens[4], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
@@ -128,7 +132,7 @@ namespace Client
                             // Kill the BinaryWriter and close the socket after the file has been received.
                             Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
                             bWrite.Close();
-                            //TcpClientSocket.Close();
+                            TcpClientSocket.Close();
                             //loop = false;
                         }
                         catch(Exception error)
