@@ -90,6 +90,15 @@ namespace Client
                         TcpPeerSocket.Connect(tokens[4], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
                         TcpPeerSocket.Send(clientData);
+                        try
+                        {
+                            // Close the peer socket after the data has been sent
+                            TcpPeerSocket.Close();
+                        }
+                        catch(Exception error)
+                        {
+                            Debug.WriteLine("TcpPeerSocket.Close() error [CLIENTTHREADHANDLER] " + error.ToString());
+                        }
                     }catch(Exception error)
                     {
                         Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
@@ -102,11 +111,32 @@ namespace Client
                     byte[] b = new byte[1500];
                     int csr = TcpClientSocket.Receive(b);
                     */
-                    string receivedPath = "C:\\Clinet\\";
-                    int fileNameLen = BitConverter.ToInt32(dataArray, 0);
-                    string fileName = Encoding.ASCII.GetString(dataArray, 4, fileNameLen);
-                    BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Append));
-                    bWrite.Write(dataArray, 4 + fileNameLen, csr - 4 - fileNameLen);
+                    try
+                    {
+                        // Receive the requested file
+                        Debug.WriteLine("Receiving requested file.");
+
+                        string receivedPath = "C:\\Clinet\\";
+                        int fileNameLen = BitConverter.ToInt32(dataArray, 0);
+                        string fileName = Encoding.ASCII.GetString(dataArray, 4, fileNameLen);
+                        BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Append));
+                        bWrite.Write(dataArray, 4 + fileNameLen, csr - 4 - fileNameLen);
+
+                        try
+                        {
+                            // Kill the loop when all information swapping has completed
+                            Debug.WriteLine("Killing client request loop [CLIENTTHREADHANDLER].");
+                            loop = false;
+                        }
+                        catch(Exception error)
+                        {
+                            Debug.WriteLine("Loop kill error [CLIENTTHREADHANDLER] " + error.ToString());
+                        }
+                    }
+                    catch(Exception error)
+                    {
+                        Debug.WriteLine("File receive error [CLIENTTHREADHANDLER] " + error.ToString());
+                    }
                 }
             }   // End while loop
         }
