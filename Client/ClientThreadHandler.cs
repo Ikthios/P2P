@@ -87,14 +87,14 @@ namespace Client
                         // Connect to the peer
                         TcpPeerSocket.Connect(tokens[4], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
-                        Debug.WriteLine("Sending file to " + tokens[4] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
+                        Debug.WriteLine("Sending file " + tokens[3] + " to " + tokens[4] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
                         TcpPeerSocket.Send(clientData);
                         try
                         {
                             // Close the peer socket after the data has been sent
                             Debug.WriteLine("Killing TcpPeerSocket [CLIENTTHREADHANDER].");
                             TcpPeerSocket.Close();
-                            //loop = false;
+                            loop = false;
                         }
                         catch(Exception error)
                         {
@@ -142,6 +142,7 @@ namespace Client
                         loop = false;
                     }
                 }
+                loop = true;
             }   // End while loop
         }
 
