@@ -79,6 +79,7 @@
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientMain.cs" />
+    <Compile Include="ClientMethods.cs" />
     <Compile Include="ClientThreadHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="About.resx">
