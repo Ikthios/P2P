@@ -86,7 +86,7 @@ namespace Server
                         */
                         // Search data list for files
                         Console.WriteLine("File search for " + tokens[1] + " received.");
-                        string hostingPeer = servDB.RetreivePeer(tokens[2], dataString.Remove(0,4));   // Remove the 'CFR' keyword
+                        string hostingPeer = servDB.RetreivePeer(tokens[2], tokens[1]);   // Remove the 'CFR' keyword
                         clientSocket.Send(encoding.GetBytes(hostingPeer));
                         clientSocket.Send(encoding.GetBytes("SCL"));
                     }
