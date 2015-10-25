@@ -72,7 +72,7 @@ namespace Client
                     // Internal check
                     Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
                     // Create the requested file
-                    string filePath = "C:\\Clinet\\";
+                    string filePath = @"C:\Clinet\";
                     string fileName = tokens[3];
                     byte[] fnByte = Encoding.ASCII.GetBytes(fileName);
                     byte[] fileData = File.ReadAllBytes(filePath + fileName);
@@ -117,10 +117,10 @@ namespace Client
                         // Receive the requested file
                         Debug.WriteLine("Receiving requested file.");
 
-                        string receivedPath = @"C:\Clinet\";
+                        string receivedPath = @"C:/Clinet/";
                         int fileNameLen = BitConverter.ToInt32(dataArray, 0);
                         string fileName = Encoding.ASCII.GetString(dataArray, 4, fileNameLen);
-                        BinaryWriter bWrite = new BinaryWriter(File.Open(/*receivedPath + */fileName, FileMode.Append));
+                        BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Create/*FileMode.Append, FileAccess.Write*/));
                         bWrite.Write(dataArray, 4 + fileNameLen, csr - 4 - fileNameLen);
 
                         try
@@ -139,6 +139,7 @@ namespace Client
                     catch(Exception error)
                     {
                         Debug.WriteLine("File receive error [CLIENTTHREADHANDLER] " + error.ToString());
+                        loop = false;
                     }
                 }
             }   // End while loop
