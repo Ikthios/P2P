@@ -82,19 +82,19 @@ namespace Client
                     fnByte.CopyTo(clientData, 4);
                     fileData.CopyTo(clientData, 4 + fnByte.Length);
 
-                    // Internal check
-                    Debug.WriteLine("Sending file to " + tokens[4] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
                     try
                     {
                         // Connect to the peer
                         TcpPeerSocket.Connect(tokens[4], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
+                        Debug.WriteLine("Sending file to " + tokens[4] + ":" + tokens[2] + " [CLIENTTHREADHANDLER]");
                         TcpPeerSocket.Send(clientData);
                         try
                         {
                             // Close the peer socket after the data has been sent
+                            Debug.WriteLine("Killing TcpPeerSocket [CLIENTTHREADHANDER].");
                             TcpPeerSocket.Close();
-                            loop = false;
+                            //loop = false;
                         }
                         catch(Exception error)
                         {
@@ -128,8 +128,8 @@ namespace Client
                             // Kill the BinaryWriter and close the socket after the file has been received.
                             Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
                             bWrite.Close();
-                            TcpClientSocket.Close();
-                            loop = false;
+                            //TcpClientSocket.Close();
+                            //loop = false;
                         }
                         catch(Exception error)
                         {
@@ -205,6 +205,18 @@ namespace Client
                             sendStream = tcpPeer.GetStream();
                             byte[] streamBytesData = encoding.GetBytes(dataString);
                             sendStream.Write(streamBytesData, 0, streamBytesData.Length);
+
+                            try
+                            {
+                                // Kill the sendStream and tcpPeer connection
+                                Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTTHREADHANDLER].");
+                                sendStream.Close();
+                                tcpPeer.Close();
+                            }
+                            catch(Exception error)
+                            {
+                                Debug.WriteLine("sendStream/tcpPeer close failed [CLIENTTHREADHANDLER].");
+                            }
                         }
                         catch (Exception error)
                         {
