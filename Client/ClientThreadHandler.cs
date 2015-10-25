@@ -117,10 +117,10 @@ namespace Client
                         // Receive the requested file
                         Debug.WriteLine("Receiving requested file.");
 
-                        string receivedPath = "C:\\Clinet\\";
+                        string receivedPath = @"C:\Clinet\";
                         int fileNameLen = BitConverter.ToInt32(dataArray, 0);
                         string fileName = Encoding.ASCII.GetString(dataArray, 4, fileNameLen);
-                        BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Append));
+                        BinaryWriter bWrite = new BinaryWriter(File.Open(/*receivedPath + */fileName, FileMode.Append));
                         bWrite.Write(dataArray, 4 + fileNameLen, csr - 4 - fileNameLen);
 
                         try
