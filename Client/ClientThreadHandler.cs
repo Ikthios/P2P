@@ -15,7 +15,7 @@ namespace Client
     class ClientThreadHandler : ClientForm
     {
         // Global variables
-        private Socket TcpClientSocket;
+        private Socket TcpClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private Socket TcpPeerSocket;
 
         // Default constructor
@@ -40,8 +40,6 @@ namespace Client
             ASCIIEncoding encoding = new ASCIIEncoding();
             while (loop)
             {
-                TcpClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
                 byte[] dataArray = new byte[1500];              // Create byte array for receiving client data
                                                                 // 1500 bytes is the standard TCP file transfer size
                 int csr = TcpClientSocket.Receive(dataArray);   // Receive the peer data
