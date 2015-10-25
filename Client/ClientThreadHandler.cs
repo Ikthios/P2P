@@ -102,7 +102,7 @@ namespace Client
                     byte[] b = new byte[1500];
                     int csr = TcpClientSocket.Receive(b);
                     */
-                    string receivedPath = "C:/";
+                    string receivedPath = "C:\\Clinet\\";
                     int fileNameLen = BitConverter.ToInt32(dataArray, 0);
                     string fileName = Encoding.ASCII.GetString(dataArray, 4, fileNameLen);
                     BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Append));
