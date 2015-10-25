@@ -85,6 +85,8 @@ namespace Client
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     try
                     {
+                        // Connect to the peer
+                        TcpPeerSocket.Connect(tokens[1], int.Parse(tokens[2]));
                         // Send the file to the requesting peer
                         TcpPeerSocket.Send(clientData);
                     }catch(Exception error)
