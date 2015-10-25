@@ -48,10 +48,10 @@ namespace Client
             ASCIIEncoding encoding = new ASCIIEncoding();
             while (loop)
             {
-                byte[] b = new byte[1500];          // Create byte array for receiving client data
-                                                    // 1500 bytes is the standard TCP file transfer size
-                int csr = TcpClientSocket.Receive(b);  // Receive the peer data
-                string dataString = "";             // This will hold the raw data coming in from the connected peer
+                byte[] b = new byte[1500];              // Create byte array for receiving client data
+                                                        // 1500 bytes is the standard TCP file transfer size
+                int csr = TcpClientSocket.Receive(b);   // Receive the peer data
+                string dataString = "";                 // This will hold the raw data coming in from the connected peer
 
                 // Build the message
                 for (int i = 0; i < csr; i++)
@@ -75,29 +75,42 @@ namespace Client
                 */
                 if (tokens[0].Equals("PPR"))
                 {
-                    string filePath = "C:\\Clinet\\";
-                    string fileName = tokens[3];
-                    
                     // Internal check
                     Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
-
-                    TcpClient sendPeer = new TcpClient(tokens[1], int.Parse(tokens[2]));
-                    Stream peerStream = sendPeer.GetStream();
-                    byte[] fileArray = File.ReadAllBytes(filePath + fileName);
-                    peerStream.Write(fileArray, 0, fileArray.Length);
-                    sendPeer.Close();
-                    Debug.WriteLine("File transferred [CLIENTTHREADHANDLER]");
+                    // Create the requested file
+                    string filePath = "C:\\Clinet\\";
+                    string fileName = tokens[3];
+                    byte[] fnByte = Encoding.ASCII.GetBytes(fileName);
+                    byte[] fileData = File.ReadAllBytes(filePath + fileName);
+                    byte[] clientData = new byte[4 + fnByte.Length + fileData.Length];
+                    byte[] fileNameLength = BitConverter.GetBytes(fnByte.Length);
+                    fileNameLength.CopyTo(clientData, 0);
+                    fnByte.CopyTo(clientData, 4);
+                    fileData.CopyTo(clientData, 4 + fnByte.Length);
 
                     // Internal check
                     Debug.WriteLine("Sending file [CLIENTTHREADHANDLER]");
                     try
                     {
                         // Send the file to the requesting peer
-                        //clientSocket.SendFile(filePath + fileName);
+                        TcpClientSocket.Send(clientData);
                     }catch(Exception error)
                     {
                         Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
                     }
+                }
+                else
+                {
+                    // Client receives requested file fron TcpClientSocket data variable 'csr'
+                    /*
+                    byte[] b = new byte[1500];
+                    int csr = TcpClientSocket.Receive(b);
+                    */
+                    string receivedPath = "C:/";
+                    int fileNameLen = BitConverter.ToInt32(b, 0);
+                    string fileName = Encoding.ASCII.GetString(b, 4, fileNameLen);
+                    BinaryWriter bWrite = new BinaryWriter(File.Open(receivedPath + fileName, FileMode.Append));
+                    bWrite.Write(b, 4 + fileNameLen, csr - 4 - fileNameLen);
                 }
             }   // End while loop
         }
