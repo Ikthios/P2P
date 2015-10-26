@@ -73,6 +73,7 @@ namespace Client
                     {
                         cm.SendFile(tokens[2], tokens[3], tokens[4]);
                         //loop = false;
+                        break;
                     }
                     catch(Exception error)
                     {
