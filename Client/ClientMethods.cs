@@ -20,7 +20,7 @@ namespace Client
             string filePath = @"C:\Clinet\";
             string fileName = file;
             byte[] fnByte = Encoding.ASCII.GetBytes(fileName);
-            byte[] fileData = File.ReadAllBytes(filePath + fileName);
+            byte[] fileData = File.ReadAllBytes("RQF," + filePath + fileName);
             byte[] clientData = new byte[4 + fnByte.Length + fileData.Length];
             byte[] fileNameLength = BitConverter.GetBytes(fnByte.Length);
             fileNameLength.CopyTo(clientData, 0);

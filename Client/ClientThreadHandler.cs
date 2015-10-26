@@ -80,13 +80,13 @@ namespace Client
                         Debug.WriteLine("File send error: " + error.ToString());
                     }
                 }
-                else
+                else if(tokens[0].Equals("RQF"))
                 {
                     try
                     {
                         cm.ReceiveFile(TcpClientSocket, dataArray, csr);
                         //loop = false;
-                        //break;
+                        break;
                     }
                     catch(Exception error)
                     {
