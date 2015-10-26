@@ -110,7 +110,6 @@ namespace Client
             try
             {
                 ClientMethods cm = new ClientMethods();
-                cm.SetTcpConnection(servAddress, servPort);
                 cm.ServerConnect(tcpServer, servAddress, servPort);
             }
             catch (Exception error)
