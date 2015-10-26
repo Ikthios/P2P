@@ -47,6 +47,7 @@ namespace Server
                 if (tokens[0].Equals(ipaddress))
                 {
                     peerList.Remove(address);
+                    return;
                 }
             }
         }
@@ -74,6 +75,9 @@ namespace Server
             //                     Key      IP Address      Port       Filename
             string returnString = ("PPR," + returnAddress + ",5500," + searchFile + "," + peerIp);
 
+            // Update the peerList
+            UpdatePeer(peerIp, searchFile);
+
             if (returnAddress.Equals(""))
             {
                 // Return keycode for (P)eer (N)ot (F)ound
@@ -84,6 +88,22 @@ namespace Server
             {
                 Console.WriteLine("returnString: " + returnString);
                 return returnString;
+            }
+        }
+
+        public void UpdatePeer(string peerIp, string file)
+        {
+            Console.WriteLine("Updating peerList for " + peerIp);
+
+            foreach(string address in peerList)
+            {
+                string[] addressTokens = address.Split(',');
+
+                if (addressTokens.Contains(peerIp))
+                {
+                    address.Insert(0, ',' + file);
+                    return;
+                }
             }
         }
 

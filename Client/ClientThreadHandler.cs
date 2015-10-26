@@ -72,6 +72,7 @@ namespace Client
                     try
                     {
                         cm.SendFile(tokens[2], tokens[3], tokens[4]);
+                        loop = false;
                     }
                     catch(Exception error)
                     {
@@ -90,8 +91,6 @@ namespace Client
                         Debug.WriteLine("File receive error: " + error.ToString());
                     }
                 }
-
-                dataString = "";
             }   // End while loop
         }
     }

@@ -77,6 +77,8 @@ namespace Client
                     Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
                     bWrite.Close();
                     TcpClientSocket.Close();
+
+
                     //loop = false;
                 }
                 catch (Exception error)

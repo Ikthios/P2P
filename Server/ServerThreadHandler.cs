@@ -34,6 +34,8 @@ namespace Server
             ASCIIEncoding encoding = new ASCIIEncoding();
             while (loop)
             {
+                ServDatabase servDB = new ServDatabase();
+
                 try
                 {
                     Console.WriteLine("Connection accepted from " + clientSocket.RemoteEndPoint);
@@ -66,9 +68,12 @@ namespace Server
                     (S)top (C)lient (L)oop
                     The 'SCL' keyword is used by the client to identify when the server is done sending
                     information during a connection request.
+
+                    (U)pdate (P)eer (E)ntry
+                    The 'UPE' keyword is used by the server to update the peerList when a peer receives
+                    a new file entry.
                     */
-                    ServDatabase servDB = new ServDatabase();
-                    if (tokens[0].Equals("REG")){
+                    if (tokens[0].Equals("REG")) {
                         // Register the client
                         clientSocket.Send(encoding.GetBytes("IP " + tokens[1] + " registered."));
                         clientSocket.Send(encoding.GetBytes("SCL"));
@@ -90,7 +95,19 @@ namespace Server
                         clientSocket.Send(encoding.GetBytes(hostingPeer));
                         clientSocket.Send(encoding.GetBytes("SCL"));
                     }
-                    else{
+                    else if (tokens[0].Equals("UPE"))
+                    {
+                        /*
+                        UPE Request
+                        [0] = Keyword
+                        [1] = File
+                        [2] = Requesting Peer IP Address
+                        */
+                        Console.WriteLine("Peer list udpate for " + tokens[2] + " with " + tokens[1]);
+                        servDB.UpdatePeer(tokens[2], tokens[1]);
+                    }
+                    else
+                    {
                         Console.WriteLine(dataString);  // Print client data to the console
                         /* Start data sent to client
                         This is how the peer list from the server DB will be sent.
@@ -101,7 +118,21 @@ namespace Server
                     }
                     // Clear the datastring
                     dataString = "";
-                }catch(Exception e)
+                }
+                catch(SocketException socketException)
+                {
+                    // Get IP Address:Port of client on socket
+                    IPEndPoint remoteIpEndPoint = clientSocket.RemoteEndPoint as IPEndPoint;
+
+                    // Split Endpoint object to get just IP without port on end
+                    string[] IPHolster = remoteIpEndPoint.ToString().Split(':');
+
+                    // Call remove IP of client that caused exception
+                    servDB.RemovePeer(IPHolster[0]);
+                    Console.WriteLine("Client at IP: " + IPHolster[0] + " disconnected. Peer list updated.");
+                    loop = false;
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine("Client Connection Error: " + e.ToString());
                     loop = false;
