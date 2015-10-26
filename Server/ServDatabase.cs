@@ -75,10 +75,6 @@ namespace Server
             //                     Key      IP Address      Port       Filename
             string returnString = ("PPR," + returnAddress + ",5500," + searchFile + "," + peerIp);
 
-            // Update the peerList
-            UpdatePeer(peerIp, searchFile);
-            PrintDataList();
-
             if (returnAddress.Equals(""))
             {
                 // Return keycode for (P)eer (N)ot (F)ound

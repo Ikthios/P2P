@@ -94,6 +94,7 @@ namespace Server
                         string hostingPeer = servDB.RetreivePeer(tokens[2], tokens[1]);   // Remove the 'CFR' keyword
                         clientSocket.Send(encoding.GetBytes(hostingPeer));
                         clientSocket.Send(encoding.GetBytes("SCL"));
+                        servDB.PrintDataList();
                     }
                     else if (tokens[0].Equals("UPE"))
                     {

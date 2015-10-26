@@ -12,6 +12,13 @@ namespace Client
 {
     class ClientMethods
     {
+        TcpClient tcpServer = new TcpClient();
+
+        private void SetTcpClient(TcpClient client)
+        {
+            this.tcpServer = client;
+        }
+
         public void SendFile(string port, string file, string peerIp)
         {
             // Internal check
@@ -78,6 +85,13 @@ namespace Client
                     bWrite.Close();
                     TcpClientSocket.Close();
 
+                    // Update the peerList
+                    // Send IP address and file list
+                    Stream sendStream = tcpServer.GetStream();
+                    String ipString = GetIpAddress();
+                    ASCIIEncoding encoding = new ASCIIEncoding();
+                    byte[] streamBytesIp = encoding.GetBytes("UPE," + fileName + ',' + ipString);
+                    sendStream.Write(streamBytesIp, 0, streamBytesIp.Length);
 
                     //loop = false;
                 }
@@ -181,6 +195,8 @@ namespace Client
 
         public void ServerConnect(TcpClient tcpServer, string servAddress, int servPort)
         {
+            SetTcpClient(tcpServer);
+
             // Connect to server
             tcpServer.Connect(servAddress, servPort);
             // Send IP address and file list
