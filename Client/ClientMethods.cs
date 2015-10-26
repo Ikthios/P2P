@@ -12,11 +12,11 @@ namespace Client
 {
     class ClientMethods
     {
-        TcpClient tcpServer = new TcpClient();
+        private TcpClient tcpServer = new TcpClient();
 
-        private void SetTcpClient(TcpClient client)
+        public void SetTcpConnection(string ipAddr, int port)
         {
-            this.tcpServer = client;
+            tcpServer.Connect(ipAddr, port);
         }
 
         public void SendFile(string port, string file, string peerIp)
@@ -195,8 +195,6 @@ namespace Client
 
         public void ServerConnect(TcpClient tcpServer, string servAddress, int servPort)
         {
-            SetTcpClient(tcpServer);
-
             // Connect to server
             tcpServer.Connect(servAddress, servPort);
             // Send IP address and file list
