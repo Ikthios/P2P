@@ -100,10 +100,13 @@ namespace Server
             {
                 string[] addressTokens = address.Split(',');
 
-                if (addressTokens.Contains(peerIp))
+                for(int i=0; i<addressTokens.Length; i++)
                 {
-                    address.Insert(address.Length + 1, ',' + file);
-                    return;
+                    if (addressTokens[i].Split(',').Contains(peerIp))
+                    {
+                        addressTokens[i] += (',' + file);
+                        return;
+                    }
                 }
             }
         }
