@@ -171,7 +171,7 @@ namespace Client
         {
             ClientMethods cm = new ClientMethods();
             peerListBox.AppendText("Received " + file);
-            cm.SendUpdate(tcpServer, file, GetIpAddress());
+            //cm.SendUpdate(tcpServer, file, GetIpAddress());
         }
     }
 }

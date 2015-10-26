@@ -77,21 +77,9 @@ namespace Client
                 {
                     // Kill the BinaryWriter and close the socket after the file has been received.
                     Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
-                    form.ReceiveAcknowledge(fileName);
+                    //form.ReceiveAcknowledge(fileName);
                     bWrite.Close();
-                    TcpClientSocket.Close();
-
-                    // Update the peerList
-                    // Send IP address and file list
-                    /*
-                    Stream sendStream = tcpServer.GetStream();
-                    String ipString = GetIpAddress();
-                    ASCIIEncoding encoding = new ASCIIEncoding();
-                    byte[] streamBytesIp = encoding.GetBytes("UPE," + fileName + ',' + ipString);
-                    sendStream.Write(streamBytesIp, 0, streamBytesIp.Length);
-                    */
-
-                    //loop = false;
+                    //TcpClientSocket.Close();
                 }
                 catch (Exception error)
                 {
@@ -130,7 +118,7 @@ namespace Client
                     */
                     Debug.WriteLine("Receiving data from server [CLIENTFORM].");
                     byte[] dataArray = new byte[1500];
-                    int i = sendStream.Read(dataArray, 0, 100);
+                    int i = sendStream.Read(dataArray, 0, 1500);
                     string dataString = "";
 
                     for (int j = 0; j < i; j++)
@@ -172,6 +160,7 @@ namespace Client
                                 Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTTHREADHANDLER].");
                                 sendStream.Close();
                                 tcpPeer.Close();
+                                loop = false;
                             }
                             catch (Exception error)
                             {

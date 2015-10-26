@@ -72,7 +72,7 @@ namespace Client
                     try
                     {
                         cm.SendFile(tokens[2], tokens[3], tokens[4]);
-                        loop = false;
+                        //loop = false;
                     }
                     catch(Exception error)
                     {
@@ -84,7 +84,8 @@ namespace Client
                     try
                     {
                         cm.ReceiveFile(TcpClientSocket, dataArray, csr);
-                        loop = false;
+                        //loop = false;
+                        //break;
                     }
                     catch(Exception error)
                     {
