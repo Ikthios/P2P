@@ -89,5 +89,159 @@ namespace Client
                 Debug.WriteLine("File receive error [CLIENTTHREADHANDLER] " + error.ToString());
             }
         }
+
+        public void FileSearch(TcpClient tcpServer, string sendString)
+        {
+            try
+            {
+                /*
+                Sending a message to the server
+                */
+                // Return the network stream used to send/receive data
+                Stream sendStream = tcpServer.GetStream();
+
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                // Encode 'sendString' into a stream of bytes
+                // sendString = "CFR,filename.extension,clientIPAddress
+                byte[] streamBytesA = encoding.GetBytes(sendString);
+
+                // Advance current position in this stream by # of bytes written
+                sendStream.Write(streamBytesA, 0, streamBytesA.Length);
+
+                Boolean loop = true;
+                while (loop)
+                {
+                    /*
+                    Reading a message from the server
+                    */
+                    Debug.WriteLine("Receiving data from server [CLIENTFORM].");
+                    byte[] dataArray = new byte[1500];
+                    int i = sendStream.Read(dataArray, 0, 100);
+                    string dataString = "";
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        dataString += Convert.ToChar(dataArray[j]);
+                    }
+
+                    /*
+                    If the received data is related to a peer request then
+                    here is where the return string from the server will be
+                    parsed, split and handled accordingly.
+                    [0] = Keyword
+                    [1] = IP Address (Outside peer)
+                    [2] = Port of requesting client (Outside Peer)
+                    [3] = Request filename
+                    */
+
+                    string[] tokens = dataString.Split(',');
+
+                    if (tokens[0].Equals("SCL"))
+                    {
+                        loop = false;
+                    }
+                    else if (tokens[0].Equals("PPR"))
+                    {
+                        try
+                        {
+                            // Stage 1, Send file request to peer (dataString) is already formatted for this
+                            // dataString = ("PPR," + PeerIpAddress + ",5500," + RequestedFile)
+                            TcpClient tcpPeer = new TcpClient();
+                            tcpPeer.Connect(tokens[1], int.Parse(tokens[2]));
+                            sendStream = tcpPeer.GetStream();
+                            byte[] streamBytesData = encoding.GetBytes(dataString);
+                            sendStream.Write(streamBytesData, 0, streamBytesData.Length);
+
+                            try
+                            {
+                                // Kill the sendStream and tcpPeer connection
+                                Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTTHREADHANDLER].");
+                                sendStream.Close();
+                                tcpPeer.Close();
+                            }
+                            catch (Exception error)
+                            {
+                                Debug.WriteLine("sendStream/tcpPeer close failed [CLIENTTHREADHANDLER].");
+                            }
+                        }
+                        catch (Exception error)
+                        {
+                            Debug.WriteLine("Stage 1 error: " + error.ToString());
+                        }
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                Debug.WriteLine(error.ToString());
+            }
+        }
+
+        public void ServerConnect(TcpClient tcpServer, string servAddress, int servPort)
+        {
+            // Connect to server
+            tcpServer.Connect(servAddress, servPort);
+            // Send IP address and file list
+            Stream sendStream = tcpServer.GetStream();
+            String ipString = GetIpAddress();
+            ASCIIEncoding encoding = new ASCIIEncoding();
+
+            /*
+            Read the directory "C:\Clinet" for filenames and add them to a string array.
+            Then add the contents of the string array to a single comman separated value,
+            add it to the encoded stream and send it to the server for registration.
+            */
+            string[] filenameArray = Directory.GetFiles(@"C:\Clinet")
+                .Select(path => Path.GetFileName(path))
+                .ToArray();
+            string fileString = "";
+            foreach (string token in filenameArray)
+            {
+                fileString += (token + ',');
+            }
+            /*
+            The 'REG' keyword is used by the server to identify that this is a registration call
+            made by the client form and that it is to be registered in the serverside database.
+            */
+            byte[] streamBytesIp = encoding.GetBytes("REG," + ipString + ',' + fileString);
+            sendStream.Write(streamBytesIp, 0, streamBytesIp.Length);
+
+            Boolean loop = true;
+            while (loop)
+            {
+                /*
+                Reading a message from the server
+                */
+                byte[] streamBytesB = new byte[100];
+                int i = sendStream.Read(streamBytesB, 0, 100);
+                string dataString = "";
+
+                for (int j = 0; j < i; j++)
+                {
+                    //Console.Write(Convert.ToChar(streamBytesB[j]));
+                    dataString += Convert.ToChar(streamBytesB[j]);
+                }
+
+                if (dataString.Equals("SCL"))
+                {
+                    loop = false;
+                }
+            }
+        }
+
+        public string GetIpAddress()
+        {
+            IPHostEntry host;
+            string localIp = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress address in host.AddressList)
+            {
+                if (address.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIp = address.ToString();
+                }
+            }
+            return localIp;
+        }
     }
 }

@@ -17,8 +17,8 @@ namespace Client
 
         public void StartClientThread()
         {
-            ClientThreadHandler cth = new ClientThreadHandler();
-            string ipAddress = cth.GetIpAddress();
+            ClientMethods cm = new ClientMethods();
+            string ipAddress = cm.GetIpAddress();
             int port = 5500;
 
             // Internal check

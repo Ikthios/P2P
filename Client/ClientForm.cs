@@ -109,8 +109,8 @@ namespace Client
 
             try
             {
-                ClientThreadHandler cth = new ClientThreadHandler();
-                cth.ServerConnect(tcpServer, servAddress, servPort);
+                ClientMethods cm = new ClientMethods();
+                cm.ServerConnect(tcpServer, servAddress, servPort);
             }
             catch (Exception error)
             {
@@ -126,7 +126,7 @@ namespace Client
             /*
             File search button code
             */
-            ClientThreadHandler cth = new ClientThreadHandler();
+            ClientMethods cm = new ClientMethods();
 
             /*
             (C)lient (F)ile (R)equest
@@ -138,7 +138,7 @@ namespace Client
             // Clear the textbox
             fileSearchBox.Text = "";
 
-            cth.FileSearch(tcpServer, sendString);
+            cm.FileSearch(tcpServer, sendString);
         }
 
         private string GetIpAddress()
