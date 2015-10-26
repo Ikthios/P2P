@@ -77,6 +77,7 @@ namespace Server
 
             // Update the peerList
             UpdatePeer(peerIp, searchFile);
+            PrintDataList();
 
             if (returnAddress.Equals(""))
             {
