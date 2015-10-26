@@ -95,18 +95,20 @@ namespace Server
         public void UpdatePeer(string peerIp, string file)
         {
             Console.WriteLine("Updating peerList for " + peerIp);
-
             foreach(string address in peerList)
             {
-                string[] addressTokens = address.Split(',');
-
-                for(int i=0; i<addressTokens.Length; i++)
+                if (address.Split(',').Contains(peerIp))
                 {
-                    if (addressTokens[i].Split(',').Contains(peerIp))
+                    string[] tempArray = address.Split(',');
+                    List<string> tempList = tempArray.ToList();
+                    RemovePeer(peerIp);
+                    tempList.Add(file);
+                    string tempString = (peerIp + ',');
+                    foreach(string token in tempList)
                     {
-                        addressTokens[i] += (',' + file);
-                        return;
+                        tempString += (token + ',');
                     }
+                    RegisterPeer(tempString);
                 }
             }
         }
