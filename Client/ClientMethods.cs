@@ -55,6 +55,8 @@ namespace Client
 
         public void ReceiveFile(Socket TcpClientSocket, byte[] dataArray, int csr)
         {
+            ClientForm form = new ClientForm();
+
             // Client receives requested file fron TcpClientSocket data variable 'csr'
             /*
             byte[] b = new byte[1500];
@@ -75,6 +77,7 @@ namespace Client
                 {
                     // Kill the BinaryWriter and close the socket after the file has been received.
                     Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
+                    form.ReceiveAcknowledge(fileName);
                     bWrite.Close();
                     TcpClientSocket.Close();
 
@@ -238,6 +241,30 @@ namespace Client
                     loop = false;
                 }
             }
+        }
+
+        public void SendUpdate(TcpClient tcpServer, string file, string ipAddr)
+        {
+            /*
+            UPE Request
+            [0] = Keyword
+            [1] = File
+            [2] = Requesting Peer IP Address
+            */
+            string updateRequest = ("UPE," + file + "," + ipAddr);
+            /*
+            Sending a message to the server
+            */
+            // Return the network stream used to send/receive data
+            Stream sendStream = tcpServer.GetStream();
+
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            // Encode 'sendString' into a stream of bytes
+            // sendString = "CFR,filename.extension,clientIPAddress
+            byte[] streamBytesA = encoding.GetBytes(updateRequest);
+
+            // Advance current position in this stream by # of bytes written
+            sendStream.Write(streamBytesA, 0, streamBytesA.Length);
         }
 
         public string GetIpAddress()

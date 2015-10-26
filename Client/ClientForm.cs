@@ -166,5 +166,12 @@ namespace Client
         {
             errorTextBox.AppendText(sentError);
         }
+
+        public void ReceiveAcknowledge(string file)
+        {
+            ClientMethods cm = new ClientMethods();
+            peerListBox.AppendText("Received " + file);
+            cm.SendUpdate(tcpServer, file, GetIpAddress());
+        }
     }
 }
