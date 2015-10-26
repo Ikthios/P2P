@@ -102,7 +102,7 @@ namespace Server
 
                 if (addressTokens.Contains(peerIp))
                 {
-                    address.Insert(0, ',' + file);
+                    address.Insert(address.Length + 1, ',' + file);
                     return;
                 }
             }

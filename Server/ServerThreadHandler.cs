@@ -130,6 +130,7 @@ namespace Server
                     // Call remove IP of client that caused exception
                     servDB.RemovePeer(IPHolster[0]);
                     Console.WriteLine("Client at IP: " + IPHolster[0] + " disconnected. Peer list updated.");
+                    servDB.PrintDataList();
                     loop = false;
                 }
                 catch (Exception e)
