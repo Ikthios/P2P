@@ -74,7 +74,7 @@ namespace Server
                 Console.WriteLine(ip);
             }
 
-
+            updatePingList();
 
             Console.WriteLine();
             checkedIPAddresses.Clear();
