@@ -80,7 +80,7 @@ namespace Client
                         Debug.WriteLine("File send error: " + error.ToString());
                     }
                 }
-                else if(tokens[0].Equals("RQF"))
+                else
                 {
                     try
                     {

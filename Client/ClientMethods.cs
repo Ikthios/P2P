@@ -15,12 +15,12 @@ namespace Client
         public void SendFile(string port, string file, string peerIp)
         {
             // Internal check
-            Debug.WriteLine("Constructing file [CLIENTTHREADHANDLER]");
+            Debug.WriteLine("Constructing file [CLIENTMETHODS]");
             // Create the requested file
             string filePath = @"C:\Clinet\";
             string fileName = file;
             byte[] fnByte = Encoding.ASCII.GetBytes(fileName);
-            byte[] fileData = File.ReadAllBytes("RQF," + filePath + fileName);
+            byte[] fileData = File.ReadAllBytes(filePath + fileName);
             byte[] clientData = new byte[4 + fnByte.Length + fileData.Length];
             byte[] fileNameLength = BitConverter.GetBytes(fnByte.Length);
             fileNameLength.CopyTo(clientData, 0);
@@ -34,22 +34,22 @@ namespace Client
                 // Connect to the peer
                 TcpPeerSocket.Connect(peerIp, int.Parse(port));
                 // Send the file to the requesting peer
-                Debug.WriteLine("Sending file " + file + " to " + peerIp + ":" + port + " [CLIENTTHREADHANDLER]");
+                Debug.WriteLine("Sending file " + file + " to " + peerIp + ":" + port + " [CLIENTMETHODS]");
                 TcpPeerSocket.Send(clientData);
                 try
                 {
                     // Close the peer socket after the data has been sent
-                    Debug.WriteLine("Killing TcpPeerSocket [CLIENTTHREADHANDER].");
+                    Debug.WriteLine("Killing TcpPeerSocket [CLIENTMETHODS].");
                     TcpPeerSocket.Close();
                 }
                 catch (Exception error)
                 {
-                    Debug.WriteLine("TcpPeerSocket.Close() error [CLIENTTHREADHANDLER] " + error.ToString());
+                    Debug.WriteLine("TcpPeerSocket.Close() error [CLIENTMETHODS] " + error.ToString());
                 }
             }
             catch (Exception error)
             {
-                Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTTHREADHANDLER]");
+                Debug.WriteLine("Sending file error: " + error.ToString() + " [CLIENTMETHODS]");
             }
         }
 
@@ -116,7 +116,7 @@ namespace Client
                     /*
                     Reading a message from the server
                     */
-                    Debug.WriteLine("Receiving data from server [CLIENTFORM].");
+                    Debug.WriteLine("Receiving data from server [CLIENTMETHODS].");
                     byte[] dataArray = new byte[1500];
                     int i = sendStream.Read(dataArray, 0, 1500);
                     string dataString = "";
@@ -157,14 +157,14 @@ namespace Client
                             try
                             {
                                 // Kill the sendStream and tcpPeer connection
-                                Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTTHREADHANDLER].");
+                                Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTMETHODS].");
                                 sendStream.Close();
                                 tcpPeer.Close();
-                                loop = false;
+                                //loop = false;
                             }
                             catch (Exception error)
                             {
-                                Debug.WriteLine("sendStream/tcpPeer close failed [CLIENTTHREADHANDLER].");
+                                Debug.WriteLine("sendStream/tcpPeer close failed [CLIENTMETHODS].");
                             }
                         }
                         catch (Exception error)
