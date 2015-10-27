@@ -6,9 +6,7 @@ This README will explain the innerworkings of the Clinet P2P system
 2) Create/put files into the Clinet folder you just created.
 
 [Running the Server]
-At startup, the server will ask for the hosting IP address and the port number.
-It is reccommended to run the server on port 6000. After inputing this information
-the server will run in the background and handle requests accordingly.
+At startup, the server will automatically grab the localhost's IP address and start hosting on port 6000 (TCP) and 6001 (UDP). HELLO packets will be sent to the server from the peer at even intervals. The server will register when a peer sends a HELLO packet and will delete the peer when a HELLO packet is not received after 2 minutes.
 
 [Explaining the Client]
 There are five sections to the client form:
@@ -38,7 +36,3 @@ the connect button which will connect to and register the peer with the server.
 After starting the client the user will have to perform two tasks, starting the internal server
 to handle peer requests and connecting to the server. After these tasks are performed the user
 can begin to search for files, which will automatically be downloaded by the client.
-
-[To Do]
-1) Peers can receive files sent by other peers but they do not know what to do with it.
-2) UDP alive acknowledgement connection from peer to server.
