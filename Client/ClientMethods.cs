@@ -12,6 +12,21 @@ namespace Client
 {
     class ClientMethods
     {
+        //public void acknowledgeSendFile(string port, string peerIp)
+        //{
+        //    try
+        //    {
+        //        Socket TcpPeerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        //        TcpPeerSocket.Connect(peerIp, int.Parse(port));
+        //        byte[] acknowledgeCode = Encoding.ASCII.GetBytes("FSA");
+        //        TcpPeerSocket.Send(acknowledgeCode);
+        //    }
+        //    catch(Exception e)
+        //    {
+
+        //    }
+        //}
+
         public void SendFile(string port, string file, string peerIp)
         {
             // Internal check

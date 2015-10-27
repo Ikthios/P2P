@@ -67,26 +67,25 @@ namespace Client
                 The 'PPR' keyword is used by the client to identify that the incoming
                 data is from another peer requesting a locally hosted file.
                 */
+                ///Listening for clients or other peers
                 if (tokens[0].Equals("PPR"))
                 {
                     try
                     {
                         cm.SendFile(tokens[2], tokens[3], tokens[4]);
-                        //loop = false;
-                        break;
                     }
                     catch(Exception error)
                     {
                         Debug.WriteLine("File send error: " + error.ToString());
                     }
                 }
-                else
+                //Peer send file acknolwedgement
+                if(!tokens[0].Equals("PPR"))
                 {
                     try
                     {
-                        cm.ReceiveFile(TcpClientSocket, dataArray, csr);
-                        //loop = false;
-                        break;
+                        Debug.WriteLine("SHOULD BE READING");
+                        //cm.ReceiveFile(TcpClientSocket, dataArray, csr);
                     }
                     catch(Exception error)
                     {
