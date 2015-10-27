@@ -88,6 +88,11 @@ namespace Server
             }
         }
 
+        public List<string> retrieveList()
+        {
+            return peerList;
+        }
+
         public void UpdatePeer(string peerIp, string file)
         {
             Console.WriteLine("Updating peerList for " + peerIp);

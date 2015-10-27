@@ -44,14 +44,8 @@ namespace UDP
                 {
                     Console.WriteLine(" Exception: {0}", e.Message);
                 }
-                Thread.Sleep(5000);
+                Thread.Sleep(60000);
             }
-        }
-
-        public static void Main(string[] args)
-        {
-            UDPSender test = new UDPSender("10.134.164.221", 11000);
-            test.startUDPSender();
         }
     }
 }

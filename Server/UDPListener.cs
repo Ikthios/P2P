@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace UDPListener
+namespace Server
 {
     class UDPListener
     {
@@ -56,8 +56,8 @@ namespace UDPListener
 
         private static void SetTimer()
         {
-            // Create a timer with a twenty second interval.
-            checkTimer = new System.Timers.Timer(20000);
+            // Create a timer with a 2 minute interval.
+            checkTimer = new System.Timers.Timer(200000);
             // Hook up the Elapsed event for the timer. 
             checkTimer.Elapsed += OnTimedEvent;
             checkTimer.AutoReset = true;
@@ -66,14 +66,41 @@ namespace UDPListener
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
+            Console.WriteLine("Server checked list of peers at {0:HH:mm:ss.fff}",
                               e.SignalTime);
+            Console.WriteLine("Printing list of active peer IP Addresses:");
             foreach(string ip in checkedIPAddresses)
             {
-                //Compare peer list to this list and remove
                 Console.WriteLine(ip);
             }
+
+
+
+            Console.WriteLine();
             checkedIPAddresses.Clear();
+        }
+
+        private static void updatePingList()
+        {
+            ServDatabase disBass = new ServDatabase();
+            List<string> databaseList = disBass.retrieveList();
+
+            foreach(string bassEntry in databaseList)
+            {
+                bool found = false;
+                string[] holster = bassEntry.Split(',');
+                foreach(string listenerEntry in checkedIPAddresses)
+                {
+                    if(holster[0].Equals(listenerEntry))
+                    {
+                        found = true;
+                    }
+                }
+                if(!found)
+                {
+                    disBass.RemovePeer(holster[0]);
+                }
+            }
         }
     } 
 
