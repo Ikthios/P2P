@@ -86,6 +86,7 @@ namespace Server
         {
             ServDatabase disBass = new ServDatabase();
             List<string> databaseList = disBass.retrieveList();
+            List<string> removalList = new List<string>();
 
             foreach(string bassEntry in databaseList)
             {
@@ -95,13 +96,14 @@ namespace Server
                 {
                     if(holster[0].Equals(listenerEntry))
                     {
-                        found = true;
+                        removalList.Add(holster[0]);
                     }
                 }
-                if(!found)
-                {
-                    disBass.RemovePeer(holster[0]);
-                }
+            }
+
+            foreach(string entry in removalList)
+            {
+                disBass.RemovePeer(entry);
             }
         }
     } 
