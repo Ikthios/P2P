@@ -96,8 +96,12 @@ namespace Server
                 {
                     if(holster[0].Equals(listenerEntry))
                     {
-                        removalList.Add(holster[0]);
+                        found = true;
                     }
+                }
+                if(!found)
+                {
+                    removalList.Add(holster[0]);
                 }
             }
 

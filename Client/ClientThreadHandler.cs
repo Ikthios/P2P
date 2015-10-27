@@ -85,7 +85,7 @@ namespace Client
                     try
                     {
                         Debug.WriteLine("SHOULD BE READING");
-                        //cm.ReceiveFile(TcpClientSocket, dataArray, csr);
+                        cm.ReceiveFile(TcpClientSocket, dataArray, csr);
                     }
                     catch(Exception error)
                     {

@@ -55,7 +55,7 @@ namespace Client
                 {
                     // Close the peer socket after the data has been sent
                     Debug.WriteLine("Killing TcpPeerSocket [CLIENTMETHODS].");
-                    TcpPeerSocket.Close();
+                    //TcpPeerSocket.Close();
                 }
                 catch (Exception error)
                 {
@@ -94,7 +94,7 @@ namespace Client
                     Debug.WriteLine("Killing the BinaryWriter [CLIENTTHREADHANDER].");
                     //form.ReceiveAcknowledge(fileName);
                     bWrite.Close();
-                    //TcpClientSocket.Close();
+                    TcpClientSocket.Close();
                 }
                 catch (Exception error)
                 {
@@ -173,8 +173,8 @@ namespace Client
                             {
                                 // Kill the sendStream and tcpPeer connection
                                 Debug.WriteLine("Killing sendStream and tcpPeer [CLIENTMETHODS].");
-                                sendStream.Close();
-                                tcpPeer.Close();
+                                //sendStream.Close();
+                                //tcpPeer.Close();
                                 //loop = false;
                             }
                             catch (Exception error)
