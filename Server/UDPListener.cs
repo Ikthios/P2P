@@ -57,7 +57,7 @@ namespace Server
         private static void SetTimer()
         {
             // Create a timer with a 2 minute interval.
-            checkTimer = new System.Timers.Timer(200000);
+            checkTimer = new System.Timers.Timer(20000);
             // Hook up the Elapsed event for the timer. 
             checkTimer.Elapsed += OnTimedEvent;
             checkTimer.AutoReset = true;
@@ -66,6 +66,7 @@ namespace Server
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
+            ServDatabase test = new ServDatabase();
             Console.WriteLine("Server checked list of peers at {0:HH:mm:ss.fff}",
                               e.SignalTime);
             Console.WriteLine("Printing list of active peer IP Addresses:");
@@ -75,8 +76,9 @@ namespace Server
             }
 
             updatePingList();
-
-            Console.WriteLine();
+            
+            Console.WriteLine("Printing list of users still in after update");
+            test.PrintDataList();
             checkedIPAddresses.Clear();
         }
 
