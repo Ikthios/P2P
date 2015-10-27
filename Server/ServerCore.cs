@@ -26,6 +26,9 @@ namespace Server
             Boolean loop = true;
             try
             {
+                UDPListener.UDPListener serverListener = new UDPListener.UDPListener(60001);
+                serverListener.StartUDPListener();
+
                 // Start listening on the specified port
                 Console.WriteLine("Starting the TCP Listener...");
                 listener.Start();

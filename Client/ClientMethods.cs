@@ -183,7 +183,17 @@ namespace Client
         public void ServerConnect(TcpClient tcpServer, string servAddress, int servPort)
         {
             // Connect to server
-            tcpServer.Connect(servAddress, servPort);
+            try
+            {
+                tcpServer.Connect(servAddress, servPort);
+            }
+            catch(Exception e)
+            {
+                
+            }
+            UDP.UDPSender clientSender = new UDP.UDPSender(servAddress, 60001);
+            clientSender.startUDPSender();
+
             // Send IP address and file list
             Stream sendStream = tcpServer.GetStream();
             String ipString = GetIpAddress();
